@@ -100,8 +100,8 @@ int main() {
 	[app sendEvent:event];
 	break;
       }
-      [app updateWindows];
     }
+    [app updateWindows];
 
     id<CAMetalDrawable> drawable   = [layer nextDrawable];
     if (drawable == nil)
