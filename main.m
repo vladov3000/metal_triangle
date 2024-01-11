@@ -100,26 +100,29 @@ int main() {
 	[app sendEvent:event];
 	break;
       }
+      [event release];
     }
     [app updateWindows];
 
-    id<CAMetalDrawable> drawable   = [layer nextDrawable];
-    if (drawable == nil)
-      continue;
+    @autoreleasepool {
+      id<CAMetalDrawable> drawable   = [layer nextDrawable];
+      if (drawable == nil)
+	continue;
 
-    MTLRenderPassDescriptor* pass        = [MTLRenderPassDescriptor renderPassDescriptor];
-    pass.colorAttachments[0].texture     = drawable.texture;
-    pass.colorAttachments[0].loadAction  = MTLLoadActionClear;
-    pass.colorAttachments[0].storeAction = MTLStoreActionStore;
-    pass.colorAttachments[0].clearColor  = MTLClearColorMake(0, 0, 0, 1);
-    id<MTLCommandBuffer> command_buffer  = [command_queue commandBuffer];
-    id<MTLRenderCommandEncoder> encoder  = [command_buffer renderCommandEncoderWithDescriptor:pass];
-    [encoder setRenderPipelineState:pipeline_state];
-    [encoder setVertexBuffer:vertex_buffer offset:0 atIndex:0];
-    [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
-    [encoder endEncoding];
-    [command_buffer presentDrawable:drawable];
-    [command_buffer commit];
-    [layer display];
+      MTLRenderPassDescriptor* pass        = [MTLRenderPassDescriptor renderPassDescriptor];
+      pass.colorAttachments[0].texture     = drawable.texture;
+      pass.colorAttachments[0].loadAction  = MTLLoadActionClear;
+      pass.colorAttachments[0].storeAction = MTLStoreActionStore;
+      pass.colorAttachments[0].clearColor  = MTLClearColorMake(0, 0, 0, 1);
+      id<MTLCommandBuffer> command_buffer  = [command_queue commandBuffer];
+      id<MTLRenderCommandEncoder> encoder  = [command_buffer renderCommandEncoderWithDescriptor:pass];
+      [encoder setRenderPipelineState:pipeline_state];
+      [encoder setVertexBuffer:vertex_buffer offset:0 atIndex:0];
+      [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
+      [encoder endEncoding];
+      [command_buffer presentDrawable:drawable];
+      [command_buffer commit];
+      [layer display];
+    }
   }
 }
