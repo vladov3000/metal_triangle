@@ -14,6 +14,7 @@ xcrun -sdk macosx metallib                                      \
       build/Shader.ir
 
 clang                                             \
+    -fobjc-arc                                    \
     -framework Cocoa                              \
     -framework Metal                              \
     -framework Quartz                             \
